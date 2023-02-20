@@ -1,0 +1,15 @@
+{
+    "TELEGRAM": {
+        "TOKEN": "6106896408:AAG28uAqF83Aazpqv0OwcQbJ7ii9p1vQ8vE",
+        "ADMINS":{
+            "A_1": 123321,
+            "A_2": 123321
+        }
+    },
+    "DATABASE": {
+        "host": "127.0.0.1",
+        "user": "root",
+        "password": "",
+        "database": "tlbot"
+    }
+}
