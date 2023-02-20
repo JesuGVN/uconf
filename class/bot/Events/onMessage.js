@@ -54,7 +54,7 @@ module.exports.onMessage = async function(){
                           await USER.setAction(id,'GET_YOUR_NAME');
                     }
                 }
-                
+
  
             }else if(text == '/admin') {
                 if(id == '239823355' || id == '455913586' || id == '274525728') {
@@ -115,7 +115,7 @@ module.exports.onMessage = async function(){
         
                             }
         
-                        }else{d
+                        }else{
                             bot.sendMessage(id,"<b>❌Ошибка: Укажите Действующее Имя пользователя</b>", {parse_mode: 'html'});
                         }
         
