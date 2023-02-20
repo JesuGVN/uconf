@@ -62,124 +62,101 @@ module.exports.onMessage = async function(){
 
                     await getAppList(id);
                 }
-            }else if(USER_ACTION == 'GET_YOUR_NAME'){
-                if(!(typeof text == undefined || typeof text == "undefined")){
-                    var setName = await USER.setName(id,text);
-                    console.log(setName);
-
-                    if(setName == true){
-                        await USER.setAction(id,'GET_YOUR_YEAR_OLD');
-
-                        bot.sendMessage(id, "<b>Очень рады, что ты присоединился к нам!</b>", {parse_mode: 'html'});
-
-                        setTimeout(function() {
-                            bot.sendMessage(id, "Сколько тебе лет?", {parse_mode: 'html'});
-                        }, 1500)
-                    }
-                }else{
-                    bot.sendMessage(id,"<b>❌Ошибка: Укажите Действующее Имя пользователя</b>", {parse_mode: 'html'});
-                }
-            }else if(USER_ACTION == 'GET_YOUR_YEAR_OLD'){
-                if(!(typeof text == undefined || typeof text == "undefined")){
-                 
-                    var setYearOld = await USER.setYearOld(id,text);
-
-                    if(setYearOld){
-                        await USER.setAction(id,'GET_CITY');  
+            }else if (USER_ACTION != 'DEFAULT') {
+                if(text == undefined) {
+                    bot.sendMessage(id,"<b>🚫Не правильный формат</b>", {parse_mode: 'html'});
+                }else {
+                    if(USER_ACTION == 'GET_YOUR_NAME'){
+                        if(!(typeof text == undefined || typeof text == "undefined")){
+                            var setName = await USER.setName(id,text);
+                            console.log(setName);
+        
+                            if(setName == true){
+                                await USER.setAction(id,'GET_YOUR_YEAR_OLD');
+        
+                                bot.sendMessage(id, "<b>Очень рады, что ты присоединился к нам!</b>", {parse_mode: 'html'});
+        
+                                setTimeout(function() {
+                                    bot.sendMessage(id, "Сколько тебе лет?", {parse_mode: 'html'});
+                                }, 1500)
+                            }
+                        }else{
+                            bot.sendMessage(id,"<b>❌Ошибка: Укажите Действующее Имя пользователя</b>", {parse_mode: 'html'});
+                        }
+                    }else if(USER_ACTION == 'GET_YOUR_YEAR_OLD'){
+                        if(!(typeof text == undefined || typeof text == "undefined")){
+                         
+                            var setYearOld = await USER.setYearOld(id,text);
+        
+                            if(setYearOld){
+                                await USER.setAction(id,'GET_CITY');  
+                                
+                                bot.sendMessage(id,"<b>C какого ты города?</b>", {parse_mode: 'html'});
+                            }
                         
-                        bot.sendMessage(id,"<b>C какого ты города?</b>", {parse_mode: 'html'});
-                    }
-                
-                }else{
-                    bot.sendMessage(id, "<b>❌Не правильный формат</b>", {parse_mode: 'html'});
-
-                    setTimeout(function() {
-                        bot.sendMessage(id, "<b>Сколько тебе лет?</b>", {parse_mode: 'html'});
-                    }, 1000)
-                }
-            }else if(USER_ACTION == 'GET_CITY') {
-                if(!(typeof text == undefined || typeof text == "undefined")){
-                    var setCity = await USER.setUserCity(id,text);
-
-                    if(setCity) {
-                        await USER.setAction(id,'GET_CHURCH_NAME');
-
-                        setTimeout(function() {
-                            bot.sendMessage(id, "<b>Из какой ты Церкви?</b>", {parse_mode: 'html'});
-                        }, 1000)
-
-                    }
-
-
-//                     if(setCity == true){
-//                         await USER.setAction(id,'GET_PROOF_CHECK');
-
-//                         bot.sendMessage(id, `
-// <b>Приятно познакомиться!</b>
-// <i>Для завершения регистрации осталось оплатить 50.000 сум. Количество мест ограничено😉</i>
-
-// <i>Для оплаты нужно сделать перевод на карту любой удобной системой:</i>
-
-
-// 8600570464548394
-// <b>TUGELBAEVA ALIYA</b>
-
-// <i>И отправить скриншот оплаты в Бот</i>
-                                                  
-//                         `, {parse_mode: 'html'});
-
-//                     }
-                }else{d
-                    bot.sendMessage(id,"<b>❌Ошибка: Укажите Действующее Имя пользователя</b>", {parse_mode: 'html'});
-                }
-
-            }else if(USER_ACTION == 'GET_CHURCH_NAME'){
-                if(!(typeof text == undefined || typeof text == "undefined")){
-                    var setChurch = await USER.setUserChurch(id,text);
-
-                    await USER.setAction(id,'DEFAULT');  
-
-                    if(setChurch) {
-                        bot.sendMessage(id,`<b>Остался последний шаг👇</b>
-                        
+                        }else{
+                            bot.sendMessage(id, "<b>❌Не правильный формат</b>", {parse_mode: 'html'});
+        
+                            setTimeout(function() {
+                                bot.sendMessage(id, "<b>Сколько тебе лет?</b>", {parse_mode: 'html'});
+                            }, 1000)
+                        }
+                    }else if(USER_ACTION == 'GET_CITY') {
+                        if(!(typeof text == undefined || typeof text == "undefined")){
+                            var setCity = await USER.setUserCity(id,text);
+        
+                            if(setCity) {
+                                await USER.setAction(id,'GET_CHURCH_NAME');
+        
+                                setTimeout(function() {
+                                    bot.sendMessage(id, "<b>Из какой ты Церкви?</b>", {parse_mode: 'html'});
+                                }, 1000)
+        
+                            }
+        
+                        }else{d
+                            bot.sendMessage(id,"<b>❌Ошибка: Укажите Действующее Имя пользователя</b>", {parse_mode: 'html'});
+                        }
+        
+                    }else if(USER_ACTION == 'GET_CHURCH_NAME'){
+                        if(!(typeof text == undefined || typeof text == "undefined")){
+                            var setChurch = await USER.setUserChurch(id,text);
+        
+                            await USER.setAction(id,'DEFAULT');  
+        
+                            if(setChurch) {
+                                bot.sendMessage(id,`<b>Остался последний шаг👇</b>
+                                
 <i>Подпишись на наш канал и нажми на кнопку "✅Я подписался"</i>
 
 <i>Ссылка на Канал: https://t.me/+EB93BkPL2OI0MDhi</i>
-                        `, {parse_mode: 'html', disable_web_page_preview: true, reply_markup:{
-                                inline_keyboard: [
-                                    [{text: '✅Я подписался', callback_data: 'CHECKSUB_'+id}],
-                                    
-                                ]
+                                `, {parse_mode: 'html', disable_web_page_preview: true, reply_markup:{
+                                        inline_keyboard: [
+                                            [{text: '✅Я подписался', callback_data: 'CHECKSUB_'+id}],
+                                            
+                                        ]
+                                    }
+                                });
                             }
-                        });
+                        }
+        
+                    }else if(USER_ACTION == 'GET_PROOF_CHECK') {
+                        console.log(typeof msg.photo);
+        
+                        if(typeof msg.photo != 'undefined') {
+        
+                            
+                            await USER.setAction(id,'DEFAULT'); // '239823355' || id == '391024678'
+        
+                            bot.sendMessage(id,`<b>Ураа🔥</b> Регистрация почти завершенна, сейчас твоя заявка проходит проверку, ожидай🙂`, {parse_mode: 'html'});
+        
+        
+                        }else {
+                            bot.sendMessage(id,"<b>❌Ошибка: Отправьте скриншот оплаты</b>", {parse_mode: 'html'});
+                        }
+        
                     }
                 }
-
-            }else if(USER_ACTION == 'GET_PROOF_CHECK') {
-                console.log(typeof msg.photo);
-
-                if(typeof msg.photo != 'undefined') {
-
-                    
-                    await USER.setAction(id,'DEFAULT'); // '239823355' || id == '391024678'
-
-                    bot.sendMessage(id,`<b>Ураа🔥</b> Регистрация почти завершенна, сейчас твоя заявка проходит проверку, ожидай🙂`, {parse_mode: 'html'});
-
-
-                    // Это мне
-                    
-
-
-                    // Это Алие
-                    bot.sendMessage('391024678',`<b>🔥Еще один Лидер зарегистрировался!</b>
-                    
-<i>Скорее пришли мне команду /admin</i>
-<i>И я покажу тебе сколько у тебя еще работы!!!</i>`, {parse_mode: 'html'});
-
-                }else {
-                    bot.sendMessage(id,"<b>❌Ошибка: Отправьте скриншот оплаты</b>", {parse_mode: 'html'});
-                }
-
             }else if(USER_ACTION == 'DEFAULT') {
                 if(text == "📅Расписание") {
                     bot.sendMessage(msg.from.id, `
