@@ -64,7 +64,7 @@ module.exports.onMessage = async function(){
                     await getAppList(id);
                 }
             }else if (USER_ACTION != 'DEFAULT') {
-                if(text == 'undefined') {
+                if(text == undefined) {
                     bot.sendMessage(id,"<b>🚫Не правильный формат</b>", {parse_mode: 'html'});
                 }else {
                     if(USER_ACTION == 'GET_YOUR_NAME'){
