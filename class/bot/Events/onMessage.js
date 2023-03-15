@@ -68,6 +68,8 @@ module.exports.onMessage = async function(){
             }else if(text == '/mailsend'){
                 if(id == '239823355' || id == '455913586' || id == '274525728') {
 
+                    // console.log(msg.reply_to_message.entities);
+
                     // Если есть Фото
                     if(msg.reply_to_message.photo) {
                         mailSender(msg.reply_to_message.caption,'photo', msg.reply_to_message.photo[2].file_id );
