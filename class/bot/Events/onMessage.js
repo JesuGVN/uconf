@@ -11,6 +11,8 @@ module.exports.onMessage = async function(){
         var id   = msg.from.id;
         var text = msg.text;
 
+        var keyboard = ['📅Расписание', '🌐Соц. сети', '🔥Лидерские интенсивы', '❗️Размещение'];
+
         // bot.sendMessage(msg.from.id, msg.text);
         console.log(0);
         var h_user =  await USER.haveUser(id);
@@ -26,7 +28,7 @@ module.exports.onMessage = async function(){
             var USER_ACTION = await USER.userAction(id);
 
             if(regStatus == false){
-                bot.sendMessage(id,`<b>Приветствую тебя, Лидер!</b>
+                bot.sendMessage(id,`<b>Приветствую тебя!</b>
 <i>К сожалению регистрация уже закрыта</i>`, {parse_mode: 'html'});
                 return 1;
             }
@@ -63,100 +65,116 @@ module.exports.onMessage = async function(){
 
                     await getAppList(id);
                 }
+            }else if(text == '/mailsend'){
+                if(id == '239823355' || id == '455913586' || id == '274525728') {
+
+                    // Если есть Фото
+                    if(msg.reply_to_message.photo) {
+                        mailSender(msg.reply_to_message.caption,'photo', msg.reply_to_message.photo[2].file_id );
+                    } else {
+                        mailSender(msg.reply_to_message.text, 'text');
+                    }
+                }
             }else if (USER_ACTION != 'DEFAULT') {
                 if(text == undefined) {
                     bot.sendMessage(id,"<b>🚫Не правильный формат</b>", {parse_mode: 'html'});
                 }else {
-                    if(USER_ACTION == 'GET_YOUR_NAME'){
-                        if(!(typeof text == undefined || typeof text == "undefined")){
-                            var setName = await USER.setName(id,text);
-                            console.log(setName);
-        
-                            if(setName == true){
-                                await USER.setAction(id,'GET_YOUR_YEAR_OLD');
-        
-                                bot.sendMessage(id, "<b>Очень рады, что ты присоединился к нам!</b>", {parse_mode: 'html'});
-        
-                                setTimeout(function() {
-                                    bot.sendMessage(id, "Сколько тебе лет?", {parse_mode: 'html'});
-                                }, 1500)
-                            }
-                        }else{
-                            bot.sendMessage(id,"<b>❌Ошибка: Укажите Действующее Имя пользователя</b>", {parse_mode: 'html'});
-                        }
-                    }else if(USER_ACTION == 'GET_YOUR_YEAR_OLD'){
-                        if(!(typeof text == undefined || typeof text == "undefined")){
-                         
-                            var setYearOld = await USER.setYearOld(id,text);
-        
-                            if(setYearOld){
-                                await USER.setAction(id,'GET_CITY');  
-                                
-                                bot.sendMessage(id,"<b>C какого ты города?</b>", {parse_mode: 'html'});
-                            }
-                        
-                        }else{
-                            bot.sendMessage(id, "<b>❌Не правильный формат</b>", {parse_mode: 'html'});
-        
-                            setTimeout(function() {
-                                bot.sendMessage(id, "<b>Сколько тебе лет?</b>", {parse_mode: 'html'});
-                            }, 1000)
-                        }
-                    }else if(USER_ACTION == 'GET_CITY') {
-                        if(!(typeof text == undefined || typeof text == "undefined")){
-                            var setCity = await USER.setUserCity(id,text);
-        
-                            if(setCity) {
-                                await USER.setAction(id,'GET_CHURCH_NAME');
-        
-                                setTimeout(function() {
-                                    bot.sendMessage(id, "<b>Из какой ты Церкви?</b>", {parse_mode: 'html'});
-                                }, 1000)
-        
-                            }
-        
-                        }else{
-                            bot.sendMessage(id,"<b>❌Ошибка: Укажите Действующее Имя пользователя</b>", {parse_mode: 'html'});
-                        }
-        
-                    }else if(USER_ACTION == 'GET_CHURCH_NAME'){
-                        if(!(typeof text == undefined || typeof text == "undefined")){
-                            var setChurch = await USER.setUserChurch(id,text);
-        
-                            await USER.setAction(id,'DEFAULT');  
-        
-                            if(setChurch) {
-                                bot.sendMessage(id,`<b>Остался последний шаг👇</b>
-                                
-<i>Подпишись на наш канал и нажми на кнопку "✅Я подписался"</i>
 
-<i>Ссылка на Канал: https://t.me/+EB93BkPL2OI0MDhi</i>
-                                `, {parse_mode: 'html', disable_web_page_preview: true, reply_markup:{
-                                        inline_keyboard: [
-                                            [{text: '✅Я подписался', callback_data: 'CHECKSUB_'+id}],
-                                            
-                                        ]
-                                    }
-                                });
+                    if(keyboard.indexOf(text) == -1) {
+                        if(USER_ACTION == 'GET_YOUR_NAME'){
+                            if(!(typeof text == undefined || typeof text == "undefined")){
+                                var setName = await USER.setName(id,text);
+                                console.log(setName);
+            
+                                if(setName == true){
+                                    await USER.setAction(id,'GET_YOUR_YEAR_OLD');
+            
+                                    bot.sendMessage(id, "<b>Очень рады, что ты присоединился к нам!</b>", {parse_mode: 'html'});
+            
+                                    setTimeout(function() {
+                                        bot.sendMessage(id, "Сколько тебе лет?", {parse_mode: 'html'});
+                                    }, 1500)
+                                }
+                            }else{
+                                bot.sendMessage(id,"<b>❌Ошибка: Укажите Действующее Имя пользователя</b>", {parse_mode: 'html'});
                             }
-                        }
-        
-                    }else if(USER_ACTION == 'GET_PROOF_CHECK') {
-                        console.log(typeof msg.photo);
-        
-                        if(typeof msg.photo != 'undefined') {
-        
+                        }else if(USER_ACTION == 'GET_YOUR_YEAR_OLD'){
+                            if(!(typeof text == undefined || typeof text == "undefined")){
+                             
+                                var setYearOld = await USER.setYearOld(id,text);
+            
+                                if(setYearOld){
+                                    await USER.setAction(id,'GET_CITY');  
+                                    
+                                    bot.sendMessage(id,"<b>C какого ты города?</b>", {parse_mode: 'html'});
+                                }
                             
-                            await USER.setAction(id,'DEFAULT'); // '239823355' || id == '391024678'
-        
-                            bot.sendMessage(id,`<b>Ураа🔥</b> Регистрация почти завершенна, сейчас твоя заявка проходит проверку, ожидай🙂`, {parse_mode: 'html'});
-        
-        
-                        }else {
-                            bot.sendMessage(id,"<b>❌Ошибка: Отправьте скриншот оплаты</b>", {parse_mode: 'html'});
+                            }else{
+                                bot.sendMessage(id, "<b>❌Не правильный формат</b>", {parse_mode: 'html'});
+            
+                                setTimeout(function() {
+                                    bot.sendMessage(id, "<b>Сколько тебе лет?</b>", {parse_mode: 'html'});
+                                }, 1000)
+                            }
+                        }else if(USER_ACTION == 'GET_CITY') {
+                            if(!(typeof text == undefined || typeof text == "undefined")){
+                                var setCity = await USER.setUserCity(id,text);
+            
+                                if(setCity) {
+                                    await USER.setAction(id,'GET_CHURCH_NAME');
+            
+                                    setTimeout(function() {
+                                        bot.sendMessage(id, "<b>Из какой ты Церкви?</b>", {parse_mode: 'html'});
+                                    }, 1000)
+            
+                                }
+            
+                            }else{
+                                bot.sendMessage(id,"<b>❌Ошибка: Укажите Действующее Имя пользователя</b>", {parse_mode: 'html'});
+                            }
+            
+                        }else if(USER_ACTION == 'GET_CHURCH_NAME'){
+                            if(!(typeof text == undefined || typeof text == "undefined")){
+                                var setChurch = await USER.setUserChurch(id,text);
+            
+                                await USER.setAction(id,'DEFAULT');  
+            
+                                if(setChurch) {
+                                    bot.sendMessage(id,`<b>Остался последний шаг👇</b>
+                                    
+    <i>Подпишись на наш канал и нажми на кнопку "✅Я подписался"</i>
+    
+    <i>Ссылка на Канал: https://t.me/+EB93BkPL2OI0MDhi</i>
+                                    `, {parse_mode: 'html', disable_web_page_preview: true, reply_markup:{
+                                            inline_keyboard: [
+                                                [{text: '✅Я подписался', callback_data: 'CHECKSUB_'+id}],
+                                                
+                                            ]
+                                        }
+                                    });
+                                }
+                            }
+            
+                        }else if(USER_ACTION == 'GET_PROOF_CHECK') {
+                            console.log(typeof msg.photo);
+            
+                            if(typeof msg.photo != 'undefined') {
+            
+                                
+                                await USER.setAction(id,'DEFAULT'); // '239823355' || id == '391024678'
+            
+                                bot.sendMessage(id,`<b>Ураа🔥</b> Регистрация почти завершенна, сейчас твоя заявка проходит проверку, ожидай🙂`, {parse_mode: 'html'});
+            
+            
+                            }else {
+                                bot.sendMessage(id,"<b>❌Ошибка: Отправьте скриншот оплаты</b>", {parse_mode: 'html'});
+                            }
+            
                         }
-        
+                    } else {
+                        bot.sendMessage(id,"<b>🚫Не правильный формат</b>", {parse_mode: 'html'});
                     }
+
                 }
             }else if(USER_ACTION == 'DEFAULT') {
                 if(text == "📅Расписание") {
@@ -203,6 +221,8 @@ Instagram: https://www.instagram.com/united.conf/
 
 По остальным вопросам, связанным с размещением, пиши <a href="https://wa.me/77077069237?text=%D0%9F%D1%80%D0%B8%D0%B2%D0%B5%D1%82!%20%F0%9F%91%8B%D1%8F%20%D0%BD%D0%B0%20%D1%81%D1%87%D0%B5%D1%82%20%D1%80%D0%B0%D0%B7%D0%BC%D0%B5%D1%89%D0%B5%D0%BD%D0%B8%D1%8F%20%D0%B2%D0%BE%20%D0%B2%D1%80%D0%B5%D0%BC%D1%8F%20%D0%BA%D0%BE%D0%BD%D1%84%D0%B5%D1%80%D0%B5%D0%BD%D1%86%D0%B8%D0%B8">Юле Земской</a>
                     `, {parse_mode: 'html', disable_web_page_preview: true});
+                } else if (text == '/start') {
+                    bot.sendMessage(id,`<b>Ты уже зарегистрирован на конференцию 😁</b>`, {parse_mode: 'html'});
                 }
             }
         }else{
@@ -215,6 +235,42 @@ Instagram: https://www.instagram.com/united.conf/
     });
 }
 
+async function mailSender(text,type, photoID) {
+    return new Promise(async function(resolve,reject) {
+        var req =  global.connection.query('SELECT * FROM applications WHERE STATUS = ?', 'DONE', async function(err,res){
+            // console.log(err);
+            if(err) console.log(err);
+            else{
+                  if(res.length > 0){
+                     for(var i = 0; i <= res.length - 1; i++) {
+                        console.log(res[i].TG_ID);
+                        await (e => {
+                            return new Promise(async function(r,j) {
+                                setTimeout(async function(a) {
+                                    if(type == 'text') {
+                                        await bot.sendMessage(res[i].TG_ID, text); 
+                                        r(1);
+                                    } else if(type == 'photo') {
+                                        await bot.sendPhoto(res[i].TG_ID, photoID, {caption: text, disable_web_page_preview: true});
+                                        r(1);
+                                    }
+
+                                    r(0);
+                                }, 1200);
+                            })
+                        })();
+
+                        if(i == res.length - 1) {
+                            resolve(1);
+                        }
+
+                     }
+                  }
+              }
+
+          });
+    });
+}
 
 async function register(msg) {
     return new Promise( async function(resolve, reject) {

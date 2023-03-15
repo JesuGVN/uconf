@@ -11,7 +11,6 @@ module.exports.onCallback = function(){
         console.log(msg);
         
         
-        
         if(action[0] == 'accept') {
             await global.connection.query('UPDATE applications SET ? WHERE ID = ?', [{STATUS: 'DONE'}, action[1]], function(err){
                 if(err) throw err;
