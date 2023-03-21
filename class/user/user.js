@@ -234,7 +234,8 @@ var sendApplication = function(msg) {
                     CHURCH: res[0].CHURCH,
                     PHOTO_ID: 'AgACAgIAAxkBAAOZY_MZAmz4xJGT6UgN0eeibpxZcfAAArPFMRuc45hL398zo1d0FgQBAAMCAAN5AAMuBA',
                     PHOTO_UNIQUE_ID: 'AQADs8UxG5zjmEt-',
-                    REG_DATE: func.getDateTime()
+                    REG_DATE: func.getDateTime(),
+                    STATUS: 'DONE'
                 }
 
                 var user = await global.connection.query('INSERT INTO applications SET ?', USER,function(err,res){

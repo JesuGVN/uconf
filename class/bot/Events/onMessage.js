@@ -11,27 +11,25 @@ module.exports.onMessage = async function(){
         var id   = msg.from.id;
         var text = msg.text;
 
+        console.log(msg);
+
         var keyboard = ['📅Расписание', '🌐Соц. сети', '🔥Лидерские интенсивы', '❗️Размещение'];
 
         // bot.sendMessage(msg.from.id, msg.text);
         console.log(0);
         var h_user =  await USER.haveUser(id);
-        console.log(h_user);
-
-
-        console.log(msg);
+      
+        if(regStatus == false && h_user == 0){
+            bot.sendMessage(id,`<b>Приветствую тебя!</b>
+<i>К сожалению регистрация в Боте уже закрыта</i>`, {parse_mode: 'html'});
+            return 1;
+        }
        
         logger.log("@" + msg.from.username + ": " + msg.text);
 
         if (h_user == 1){
             // Если пользователь Зарегистрирован
             var USER_ACTION = await USER.userAction(id);
-
-            if(regStatus == false){
-                bot.sendMessage(id,`<b>Приветствую тебя!</b>
-<i>К сожалению регистрация уже закрыта</i>`, {parse_mode: 'html'});
-                return 1;
-            }
 
             if(text == '/restart'){
                 let del =  await USER.delUser(msg.from.id);
@@ -144,9 +142,9 @@ module.exports.onMessage = async function(){
                                 if(setChurch) {
                                     bot.sendMessage(id,`<b>Остался последний шаг👇</b>
                                     
-    <i>Подпишись на наш канал и нажми на кнопку "✅Я подписался"</i>
+<i>Подпишись на наш канал и нажми на кнопку "✅Я подписался"</i>
     
-    <i>Ссылка на Канал: https://t.me/+EB93BkPL2OI0MDhi</i>
+<i>Ссылка на Канал: https://t.me/+EB93BkPL2OI0MDhi</i>
                                     `, {parse_mode: 'html', disable_web_page_preview: true, reply_markup:{
                                             inline_keyboard: [
                                                 [{text: '✅Я подписался', callback_data: 'CHECKSUB_'+id}],
@@ -174,23 +172,58 @@ module.exports.onMessage = async function(){
             
                         }
                     } else {
-                        bot.sendMessage(id,"<b>🚫Не правильный формат</b>", {parse_mode: 'html'});
+                        bot.sendMessage(id,`<b>🚫Не правильный формат!</b> 
+<i>Eсли ты запутался, то отправь мне комманду /restart</i>`, {parse_mode: 'html'});
                     }
 
                 }
             }else if(USER_ACTION == 'DEFAULT') {
                 if(text == "📅Расписание") {
-                    bot.sendMessage(msg.from.id, `
-<b>Расписание</b>
 
-<i>Регистрация на конференцию будет отркыта 21-го марта 16:00 </i>
+                    const txt = `
+<b>Расписание на сегодня</b>
 
-<i>Закончится конференция 23-го марта в 20:00</i>
+<b>16:00 - </b> Открытие регистрации
+<b>18:30 - </b> Открытие Конфы
 
-<i>Детальное распиание будет доступно чуть позже🙌</i>
+----------------------------
 
-                    `,
-                                        {parse_mode: 'html',disable_web_page_preview: true});
+<b>22 марта </b>
+
+<b>9:00 - </b> Молитва
+<b>9:45 - </b> Мастер - классы
+<b>11:00 - </b> Сессия 1
+<b>12:30 - </b> Нетворкинг
+
+<b>12:45 - ОБЕД </b>
+
+<b>13:45 - </b> Сессия 2
+<b>15:15 - </b>  Перерыв
+<b>15:35 - </b>  Сессия 3
+
+<b>17:05 - ПЕРЕКУС </b> 
+
+<b>18:15 - </b>  Евангелизационный вечер
+
+----------------------------
+
+<b>23 марта</b>
+
+<b>10:30 - </b> Молитва
+<b>11:00 - </b> Мастер-классы
+<b>12:00 - </b> Сессия 1
+
+<b>13:30 - Обед </b>
+
+<b>14:30 - </b> Сессия 2
+
+<b>17:00 - Перекус </b>
+
+<b>18:00 - </b> Сессия 3
+                    `
+
+                    bot.sendPhoto(msg.from.id, 'AgACAgIAAxkBAANsZBmaDVDa4aeKg7xh40b13cfbVLIAArLFMRuSPslI9o8-x3rxKgsBAAMCAANzAAMvBA', {caption: txt, disable_web_page_preview: true, parse_mode: "html"})
+
                 }else if(text == '🌐Соц. сети') {
                     bot.sendMessage(msg.from.id, `
 <b>Соц. сети</b>
@@ -225,10 +258,17 @@ Instagram: https://www.instagram.com/united.conf/
                     `, {parse_mode: 'html', disable_web_page_preview: true});
                 } else if (text == '/start') {
                     bot.sendMessage(id,`<b>Ты уже зарегистрирован на конференцию 😁</b>`, {parse_mode: 'html'});
+                } else if (text == '/start qr_code') {
+                    bot.sendMessage(msg.from.id, `<b>🔥С Возвращением</b>
+`,
+                    {parse_mode: 'html',disable_web_page_preview: true, reply_markup: {
+                        'keyboard': [['📅Расписание', '❗️Размещение'], ['🌐Соц. сети']],
+                        'resize_keyboard': true
+                    }});
                 }
             }
         }else{
-            if(text == '/start' || text == '/start reg'){
+            if(text == '/start' || text == '/start reg' || text == '/start qr_code'){
                 register(msg);
             }else{
                 bot.sendMessage(id,"<b>‼️Вы не зарегистрированны в системе, для регистрации пропишите /start</b>", {parse_mode: 'html'});
@@ -239,7 +279,7 @@ Instagram: https://www.instagram.com/united.conf/
 
 async function mailSender(text,type, photoID) {
     return new Promise(async function(resolve,reject) {
-        var req =  global.connection.query('SELECT * FROM applications WHERE STATUS = ?', 'DONE', async function(err,res){
+        var req =  global.connection.query('SELECT * FROM applications WHERE STATUS = ? AND MAIL_SEND = 0', 'DONE', async function(err,res){
             // console.log(err);
             if(err) console.log(err);
             else{
@@ -250,11 +290,31 @@ async function mailSender(text,type, photoID) {
                             return new Promise(async function(r,j) {
                                 setTimeout(async function(a) {
                                     if(type == 'text') {
-                                        await bot.sendMessage(res[i].TG_ID, text); 
+                                        await bot.sendMessage(res[i].TG_ID, text)
+                                        .then(function(data) {
+                                            console.log('success');
+                                            r(1);
+                                        })
+                                        .catch(function(error) {
+                                            if (error.response && error.response.statusCode === 403) {
+                                                console.log('blocked');
+                                            }
+                                            r(0);
+                                        })
+
                                         r(1);
                                     } else if(type == 'photo') {
-                                        await bot.sendPhoto(res[i].TG_ID, photoID, {caption: text, disable_web_page_preview: true});
-                                        r(1);
+                                        await bot.sendPhoto(res[i].TG_ID, photoID, {caption: text, disable_web_page_preview: true})
+                                        .then(function(data) {
+                                            console.log('success');
+                                            r(1);
+                                        })
+                                        .catch(function(error) {
+                                            if (error.response && error.response.statusCode === 403) {
+                                                console.log('blocked');
+                                            }
+                                            r(0);
+                                        })
                                     }
 
                                     r(0);
